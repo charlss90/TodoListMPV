@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Todo List MPV</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="new_todo">New todo</string>
+    <string name="title_activity_todo_details">TodoDetails</string>
+    <string name="todo_title"><b>Title</b></string>
+    <string name="todo_description">Description</string>
+    <string name="confirm_text">Apply</string>
+</resources>
