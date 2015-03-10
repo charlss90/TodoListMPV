@@ -12,53 +12,66 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import app.chraz.todolistmpv.R;
+import app.chraz.todolistmpv.entities.IDetailsView;
+import app.chraz.todolistmpv.presenter.DetailsPresenter;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-public class TodoDetails extends ActionBarActivity {
+/**
+ * Created by Carlos E. Pazmiño Peralta on 09/3/15.
+ */
+public class TodoDetails extends ActionBarActivity implements IDetailsView {
 
-    private EditText title;
+    @InjectView(R.id.todo_title)
+    EditText title;
 
-    private EditText description;
+    @InjectView(R.id.todo_description)
+    EditText description;
+
+    DetailsPresenter detailsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_details);
+        ButterKnife.inject(this);
+        detailsPresenter = new DetailsPresenter(this);
+        getDetailOfIntent(getIntent());
 
-        Intent detailsIntent = getIntent();
-
-        title = (EditText) findViewById(R.id.todo_title);
-        title.setText(detailsIntent.getStringExtra("title"));
-        title.setSelection(title.getText().length());
-
-        description = (EditText) findViewById(R.id.todo_description);
     }
 
+    @Override
+    public void getDetailOfIntent(Intent details) {
+        title.setText(details.getStringExtra("title"));
+        title.setSelection(title.getText().length());
+    }
+
+    @Override
     public void sendDetails(View view) {
-        Intent data = new Intent();
-        data.putExtra("description", description.getText().toString());
-        data.putExtra("title", title.getText().toString());
+        if (detailsPresenter.validateDetails(title, description)) {
+            Intent data = new Intent();
+            data.putExtra("description", description.getText().toString());
+            data.putExtra("title", title.getText().toString());
 
-        setResult(RESULT_OK, data);
+            setResult(RESULT_OK, data);
 
-        finish();
+            finish();
+
+        }
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_todo_details, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

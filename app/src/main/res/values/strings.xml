@@ -7,5 +7,5 @@
     <string name="title_activity_todo_details">TodoDetails</string>
     <string name="todo_title"><b>Title</b></string>
     <string name="todo_description">Description</string>
-    <string name="confirm_text">Apply</string>
+    <string name="confirm_text">Accept</string>
 </resources>

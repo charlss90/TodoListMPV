@@ -10,20 +10,33 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import app.chraz.todolistmpv.R;
+import app.chraz.todolistmpv.entities.ITodoCreator;
 import app.chraz.todolistmpv.model.Todo;
 
 /**
  * Created by chraz on 8/03/15.
  */
-public class TodoAdapter extends ArrayAdapter<Todo> {
+public class TodoAdapter extends ArrayAdapter<Todo> implements ITodoCreator {
 
     private final ArrayList<Todo> todoList;
     private final Context context;
+    private int firstPosition = 0;
 
     public TodoAdapter(Context context, ArrayList<Todo> todoList) {
         super(context, R.layout.todo_row, todoList);
         this.todoList = todoList;
         this.context = context;
+    }
+
+    @Override
+    public void addTodo(String title, String description) {
+        this.addTodoInPosition(firstPosition, title, description);
+    }
+
+    @Override
+    public void addTodoInPosition(int position, String title, String description) {
+        this.todoList.add(position, new Todo (title, description));
+        this.notifyDataSetChanged();
     }
 
     @Override

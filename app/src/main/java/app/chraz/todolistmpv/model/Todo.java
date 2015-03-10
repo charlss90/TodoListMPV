@@ -1,7 +1,7 @@
 package app.chraz.todolistmpv.model;
 
 /**
- * Created by chraz on 8/03/15.
+ * Created by Carlos E. Pazmiño Peralta on 8/03/15.
  */
 public class Todo {
 

@@ -23,21 +23,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.chraz.todolistmpv.R;
+import app.chraz.todolistmpv.entities.IMainView;
+import app.chraz.todolistmpv.entities.ITodoMainPresenter;
 import app.chraz.todolistmpv.model.Todo;
+import app.chraz.todolistmpv.presenter.TodoMainPresenter;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
-public class MainActivity extends ActionBarActivity {
+/**
+ * Created by Carlos E. Pazmiño Peralta on 08/3/15.
+ */
+public class MainActivity extends ActionBarActivity implements IMainView{
 
-    private RelativeLayout mainLayout;
-    private ListView todoList;
-    private EditText newTodoList;
-    private RelativeLayout submenu;
+    @InjectView(R.id.main_layout)
+    RelativeLayout mainLayout;
+    @InjectView(R.id.todo_list)
+    ListView todoList;
+    @InjectView(R.id.new_todo_list)
+    EditText newTodoList;
+    @InjectView(R.id.submenu)
+    RelativeLayout submenu;
+
+    private ITodoMainPresenter todoMain;
     private ArrayList<Todo> todos;
     private TodoActionListener newTodoActionListener;
+    private TodoAdapter todoAdapter;
     private final int REQUEST_CODE = 1;
 
 
-    private void hideKeyboard() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+
+        newTodoActionListener = new TodoActionListener();
+
+        showSubMenu(false);
+
+        todos = new ArrayList<Todo>();
+
+        // Examples --
+        todos.add(0, new Todo("Ayudar a Montse", ""));
+        todos.add(0, new Todo("Practicar inglés con Montse", ""));
+        todos.add(0, new Todo("Ver la televisión",""));
+        todoAdapter = new TodoAdapter(this, todos);
+        todoList.setAdapter(todoAdapter);
+
+        todoMain = new TodoMainPresenter(this, todoAdapter);
+
+        newTodoList.setOnEditorActionListener(newTodoActionListener);
+        newTodoList.setOnFocusChangeListener(newTodoActionListener);
+    }
+
+    @Override
+    public void clearTodoEditText() {
+        newTodoList.setText("");
+        mainLayout.requestFocus();
+        hideKeyboard();
+    }
+
+    @Override
+    public void showDetailsView() {
+        Intent detailsIntent = new Intent("app.chraz.todolistmpv.TodoDetails");
+        detailsIntent.putExtra("title", newTodoList.getText().toString());
+        startActivityForResult(detailsIntent, REQUEST_CODE);
+    }
+
+
+    @Override
+    public void showSubMenu(boolean hasFocus) {
+        if (hasFocus) {
+            submenu.setVisibility(View.VISIBLE);
+        } else {
+            submenu.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -51,13 +116,7 @@ public class MainActivity extends ActionBarActivity {
         public boolean onEditorAction(TextView newTodo, int actionId, KeyEvent event) {
             Boolean isFinish = false;
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                todos.add(0, new Todo(newTodo.getText().toString(), ""));
-                ((BaseAdapter) todoList.getAdapter()).notifyDataSetChanged();
-                hideKeyboard();
-
-                newTodo.setText("");
-                mainLayout.requestFocus();
-
+                todoMain.addTodo(newTodo.getText().toString(), "");
                 isFinish = true;
             }
             return isFinish;
@@ -65,42 +124,10 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                submenu.setVisibility(View.VISIBLE);
-            } else {
-                submenu.setVisibility(View.GONE);
-            }
+            showSubMenu(hasFocus);
         }
     }
 
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
-        todoList = (ListView) findViewById(R.id.todo_list);
-        newTodoList = (EditText) findViewById(R.id.new_todo_list);
-        submenu = (RelativeLayout) findViewById(R.id.submenu);
-        newTodoActionListener = new TodoActionListener();
-
-
-        submenu.setVisibility(View.GONE);
-
-        todos = new ArrayList<Todo>();
-
-        todos.add(0, new Todo("Ayudar a Montse", ""));
-        todos.add(0, new Todo("Practicar inglés con Montse", ""));
-        todos.add(0, new Todo("Ver la televisión",""));
-
-        todoList.setAdapter(new TodoAdapter(this, todos));
-
-        newTodoList.setOnEditorActionListener(newTodoActionListener);
-        newTodoList.setOnFocusChangeListener(newTodoActionListener);
-
-    }
 
 
     @Override
@@ -109,7 +136,8 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    public void startDetails(View v) {
+    @Override
+    public void goToDetails(View v) {
         Intent detailsIntent = new Intent("app.chraz.todolistmpv.TodoDetails");
         detailsIntent.putExtra("title", newTodoList.getText().toString());
         startActivityForResult(detailsIntent, REQUEST_CODE);
@@ -120,14 +148,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_OK:
-                newTodoList.setText("");
-                mainLayout.requestFocus();
-
-                String responseTitle = data.getStringExtra("title");
-                String responseDescription = data.getStringExtra("description");
-
-                todos.add(0, new Todo(responseTitle, responseDescription));
-                ((BaseAdapter) todoList.getAdapter()).notifyDataSetChanged();
+                todoMain.addTodoByIntent(data);
                 break;
         }
     }
