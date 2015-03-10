@@ -5,9 +5,6 @@ las buenas prácticas de la programación orientada a objetos, así como los
 principios SOLID, los patrones de diseño MVP y las buenas práticas de la QA del
 software gracias a los Test.
 
-# Mi primera app
-Actualmente trabajo con entornos web y realizo esta aplicación con fines
-educativos.
 
 # Tareas realizadas
 - Creación de una lista de quehaceres
