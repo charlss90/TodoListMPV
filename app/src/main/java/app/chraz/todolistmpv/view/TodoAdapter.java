@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import app.chraz.todolistmpv.R;
 import app.chraz.todolistmpv.entities.ITodoCreator;
+import app.chraz.todolistmpv.model.DatabaseHandler;
 import app.chraz.todolistmpv.model.Todo;
 
 /**
@@ -21,11 +22,17 @@ public class TodoAdapter extends ArrayAdapter<Todo> implements ITodoCreator {
     private final ArrayList<Todo> todoList;
     private final Context context;
     private int firstPosition = 0;
+    private DatabaseHandler todoDB;
 
     public TodoAdapter(Context context, ArrayList<Todo> todoList) {
         super(context, R.layout.todo_row, todoList);
         this.todoList = todoList;
         this.context = context;
+        todoDB = new DatabaseHandler(context);
+        for (Todo newTodo : todoDB.getTodoList()) {
+            todoList.add(0, newTodo);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -35,7 +42,9 @@ public class TodoAdapter extends ArrayAdapter<Todo> implements ITodoCreator {
 
     @Override
     public void addTodoInPosition(int position, String title, String description) {
-        this.todoList.add(position, new Todo (title, description));
+        Todo newTodo = new Todo (title, description);
+        todoDB.createTodo(newTodo);
+        this.todoList.add(position, newTodo);
         this.notifyDataSetChanged();
     }
 
