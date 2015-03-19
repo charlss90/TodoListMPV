@@ -64,10 +64,6 @@ public class MainActivity extends ActionBarActivity implements IMainView{
 
         todos = new ArrayList<Todo>();
 
-        // Examples --
-        todos.add(0, new Todo("Ayudar a Montse", ""));
-        todos.add(0, new Todo("Practicar inglés con Montse", ""));
-        todos.add(0, new Todo("Ver la televisión",""));
         todoAdapter = new TodoAdapter(this, todos);
         todoList.setAdapter(todoAdapter);
 

@@ -1,9 +1,11 @@
 package app.chraz.todolistmpv.model;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by Carlos E. Pazmiño Peralta on 8/03/15.
  */
-public class Todo {
+public class Todo extends SugarRecord<Todo> {
 
     public Todo(String title, String description) {
         this.title = title;
