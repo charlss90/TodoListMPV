@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import app.chraz.todolistmpv.R;
 import app.chraz.todolistmpv.entities.ITodoCreator;
@@ -21,17 +20,22 @@ public class TodoAdapter extends ArrayAdapter<Todo> implements ITodoCreator {
 
     private final ArrayList<Todo> todoList;
     private final Context context;
+
     private int firstPosition = 0;
 
     public TodoAdapter(Context context, ArrayList<Todo> todoList) {
         super(context, R.layout.todo_row, todoList);
         this.todoList = todoList;
         this.context = context;
-        List<Todo> todos = Todo.listAll(Todo.class);
-        for (Todo newTodo : todos) {
+
+        fillTodoList();
+        notifyDataSetChanged();
+    }
+
+    private void fillTodoList() {
+        for (Todo newTodo : Todo.listAll(Todo.class)) {
             todoList.add(0, newTodo);
         }
-        notifyDataSetChanged();
     }
 
     @Override

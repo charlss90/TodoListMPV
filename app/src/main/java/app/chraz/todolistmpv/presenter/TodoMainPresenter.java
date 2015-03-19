@@ -36,7 +36,6 @@ public class TodoMainPresenter implements ITodoMainPresenter {
 
     @Override
     public void addTodoByIntent(Intent data) {
-
         String title = data.getStringExtra("title");
         String description = data.getStringExtra("description");
 

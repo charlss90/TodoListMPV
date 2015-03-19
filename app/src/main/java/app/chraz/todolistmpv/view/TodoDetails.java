@@ -3,13 +3,10 @@ package app.chraz.todolistmpv.view;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import app.chraz.todolistmpv.R;
 import app.chraz.todolistmpv.entities.IDetailsView;
@@ -35,9 +32,9 @@ public class TodoDetails extends ActionBarActivity implements IDetailsView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_details);
         ButterKnife.inject(this);
+
         detailsPresenter = new DetailsPresenter(this);
         getDetailOfIntent(getIntent());
-
     }
 
     @Override
@@ -49,18 +46,19 @@ public class TodoDetails extends ActionBarActivity implements IDetailsView {
     @Override
     public void sendDetails(View view) {
         if (detailsPresenter.validateDetails(title, description)) {
-            Intent data = new Intent();
-            data.putExtra("description", description.getText().toString());
-            data.putExtra("title", title.getText().toString());
-
-            setResult(RESULT_OK, data);
-
+            setResult(RESULT_OK, getResultIntentWithTodoData());
             finish();
-
         }
-
     }
 
+    private Intent getResultIntentWithTodoData() {
+        Intent resultIntent = new Intent();
+
+        resultIntent.putExtra("description", description.getText().toString());
+        resultIntent.putExtra("title", title.getText().toString());
+
+        return resultIntent;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

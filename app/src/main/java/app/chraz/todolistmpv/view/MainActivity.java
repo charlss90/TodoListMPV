@@ -44,6 +44,8 @@ public class MainActivity extends ActionBarActivity implements IMainView{
     EditText newTodoList;
     @InjectView(R.id.submenu)
     RelativeLayout submenu;
+    @InjectView(R.id.message_empty)
+    TextView messageEmpty;
 
     private ITodoMainPresenter todoMain;
     private ArrayList<Todo> todos;
@@ -71,13 +73,25 @@ public class MainActivity extends ActionBarActivity implements IMainView{
 
         newTodoList.setOnEditorActionListener(newTodoActionListener);
         newTodoList.setOnFocusChangeListener(newTodoActionListener);
+
+        showMessageWhenNotTodo();
     }
 
     @Override
     public void clearTodoEditText() {
         newTodoList.setText("");
         mainLayout.requestFocus();
+
+        showMessageWhenNotTodo();
         hideKeyboard();
+    }
+
+    private void showMessageWhenNotTodo() {
+        if (todos.isEmpty()) {
+            messageEmpty.setVisibility(View.VISIBLE);
+        } else {
+            messageEmpty.setVisibility(View.GONE);
+        }
     }
 
     @Override
