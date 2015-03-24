@@ -39,6 +39,13 @@ public class TodoAdapter extends ArrayAdapter<Todo> implements ITodoCreator {
     }
 
     @Override
+    public void remove(Todo todo) {
+        super.remove(todo);
+        todo.delete();
+        notifyDataSetChanged();
+    }
+
+    @Override
     public void addTodo(String title, String description) {
         this.addTodoInPosition(firstPosition, title, description);
     }

@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +37,7 @@ import butterknife.InjectView;
 /**
  * Created by Carlos E. Pazmiño Peralta on 08/3/15.
  */
-public class MainActivity extends ActionBarActivity implements IMainView{
+public class MainActivity extends ActionBarActivity implements IMainView, PopupMenu.OnMenuItemClickListener{
 
     @InjectView(R.id.main_layout)
     RelativeLayout mainLayout;
@@ -120,6 +123,7 @@ public class MainActivity extends ActionBarActivity implements IMainView{
         }
     }
 
+
     private class TodoActionListener implements TextView.OnEditorActionListener, View.OnFocusChangeListener {
 
         @Override
@@ -173,5 +177,33 @@ public class MainActivity extends ActionBarActivity implements IMainView{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+
+        MenuInflater inflater = popup.getMenuInflater();
+        popup.setOnMenuItemClickListener(this);
+
+        Menu menu = popup.getMenu();
+        inflater.inflate(R.menu.menu_todo_item, menu);
+
+        MenuItem deleteItem = menu.findItem(R.id.delete);
+        deleteItem.setActionView((View) v.getParent());
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.delete:
+                View todoView = menuItem.getActionView();
+                int position = todoList.indexOfChild(todoView);
+                todoAdapter.remove(todoAdapter.getItem(position));
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 }
