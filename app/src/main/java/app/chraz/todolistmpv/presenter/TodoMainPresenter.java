@@ -1,10 +1,8 @@
 package app.chraz.todolistmpv.presenter;
 
-import android.app.Activity;
 import android.content.Intent;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import android.view.View;
+import android.widget.ListView;
 
 import app.chraz.todolistmpv.entities.IMainView;
 import app.chraz.todolistmpv.entities.ITodoMainPresenter;
@@ -18,18 +16,18 @@ public class TodoMainPresenter implements ITodoMainPresenter {
 
     IMainView todoActivity;
 
-    TodoAdapter todoList;
+    TodoAdapter todoListAdapter;
 
     public TodoMainPresenter(IMainView todoActivity, TodoAdapter todos) {
         this.todoActivity = todoActivity;
-        todoList = todos;
+        todoListAdapter = todos;
     }
 
 
     @Override
     public void addTodo(String title, String description) {
         if (title != null && !title.isEmpty()) {
-            todoList.addTodo(title, description);
+            todoListAdapter.addTodo(title, description);
             todoActivity.clearTodoEditText();
         }
     }
@@ -40,5 +38,26 @@ public class TodoMainPresenter implements ITodoMainPresenter {
         String description = data.getStringExtra("description");
 
         addTodo(title, description);
+    }
+
+    @Override
+    public boolean removeTodoByPosition(int position) {
+        boolean isDeleted = false;
+        Todo todo = todoListAdapter.getItem(position);
+
+        if (todo != null) {
+            todoListAdapter.remove(todo);
+            todo.delete();
+
+            isDeleted = true;
+        }
+
+        return isDeleted;
+    }
+
+    @Override
+    public int getIndexOfTodoListByView(View view) {
+        ListView todoList = todoActivity.getTodoList();
+        return todoList.indexOfChild(view);
     }
 }

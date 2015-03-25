@@ -37,7 +37,7 @@ import butterknife.InjectView;
 /**
  * Created by Carlos E. Pazmiño Peralta on 08/3/15.
  */
-public class MainActivity extends ActionBarActivity implements IMainView, PopupMenu.OnMenuItemClickListener{
+public class MainActivity extends ActionBarActivity implements IMainView {
 
     @InjectView(R.id.main_layout)
     RelativeLayout mainLayout;
@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements IMainView, PopupM
     private TodoActionListener newTodoActionListener;
     private TodoAdapter todoAdapter;
     private final int REQUEST_CODE = 1;
-
+    private TodoItemMenu menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,31 +179,20 @@ public class MainActivity extends ActionBarActivity implements IMainView, PopupM
         return super.onOptionsItemSelected(item);
     }
 
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-
-        MenuInflater inflater = popup.getMenuInflater();
-        popup.setOnMenuItemClickListener(this);
-
-        Menu menu = popup.getMenu();
-        inflater.inflate(R.menu.menu_todo_item, menu);
-
-        MenuItem deleteItem = menu.findItem(R.id.delete);
-        deleteItem.setActionView((View) v.getParent());
-        popup.show();
-    }
-
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.delete:
-                View todoView = menuItem.getActionView();
-                int position = todoList.indexOfChild(todoView);
-                todoAdapter.remove(todoAdapter.getItem(position));
-                break;
-            default:
-                break;
-        }
-        return false;
+    public ListView getTodoList() {
+        return todoList;
     }
+
+    public void showPopup(View v) {
+
+        menuItem = new TodoItemMenu(this, v, todoMain);
+
+//        menuItem.setOnMenuItemClickListener(this);
+
+        menuItem.setViewDeleteAction((View) v.getParent());
+
+        menuItem.show();
+    }
+
 }
