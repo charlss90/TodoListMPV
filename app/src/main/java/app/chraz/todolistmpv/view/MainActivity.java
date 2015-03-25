@@ -188,8 +188,6 @@ public class MainActivity extends ActionBarActivity implements IMainView {
 
         menuItem = new TodoItemMenu(this, v, todoMain);
 
-//        menuItem.setOnMenuItemClickListener(this);
-
         menuItem.setViewDeleteAction((View) v.getParent());
 
         menuItem.show();

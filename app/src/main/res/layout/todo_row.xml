@@ -1,32 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
+    android:orientation="horizontal"
     android:layout_width="fill_parent" android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_weight=".10"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
 
-    <TextView
-        android:id="@+id/title_row"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <ImageButton
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/todo_make_it"
+            android:background="@drawable/menu_todo_item"
+            android:src="@drawable/abc_btn_check_to_on_mtrl_000"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
 
-    <TextView
-        android:textSize="15dp"
-        android:layout_below="@+id/title_row"
-        android:id="@+id/description_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight=".80"
+        android:layout_width="0dp"
+        android:paddingLeft="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="text de prueba"
+            android:id="@+id/title_row"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="Text prueba 1"
+            android:textSize="15dp"
+            android:id="@+id/description_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <ImageButton
-        android:layout_alignParentRight="true"
+        android:layout_weight=".10"
+        android:layout_width="0dp"
         android:background="@drawable/menu_todo_item"
         android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
-        android:layout_width="30dp"
         android:layout_height="30dp"
         android:tint="@color/menu_todo_item"
         android:onClick="showPopup"/>
 
-</RelativeLayout>
+</LinearLayout>
